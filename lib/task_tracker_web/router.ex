@@ -7,6 +7,7 @@ defmodule TaskTrackerWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug TaskTrackerWeb.Plugs.FetchSession
   end
 
   pipeline :api do
@@ -20,6 +21,7 @@ defmodule TaskTrackerWeb.Router do
     resources "/users", UserController
     resources "/tasks", TaskController
     resources "/assignments", AssignmentController
+    resources "/sessions", SessionController, only: [:create, :delete], singleton: true
   end
 
   # Other scopes may use custom stacks.
