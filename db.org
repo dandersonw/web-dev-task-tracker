@@ -1,0 +1,14 @@
+* task
+- id
+- created_at
+- started_at
+- title
+- status
+
+* user
+- id
+- username
+
+* task_user
+- task_id
+- user_id
