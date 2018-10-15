@@ -5,23 +5,37 @@
     </div>
   <% end %>
 
-  <%= label f, :title %>
-  <%= text_input f, :title %>
-  <%= error_tag f, :title %>
+  <div class="form-group">
+    <%= label f, :title %>
+    <%= text_input f, :title, class: "form-control" %>
+    <%= error_tag f, :title %>
+  </div>
 
-  <%= label f, :desc %>
-  <%= textarea f, :desc %>
-  <%= error_tag f, :desc %>
+  <div class="form-group">
+    <%= label f, :desc %>
+    <%= textarea f,  :desc, class: "form-control" %>
+    <%= error_tag f, :desc %>
+  </div>
 
-  <%= label f, :completed %>
-  <%= checkbox f, :completed %>
-  <%= error_tag f, :completed %>
+  <div class="form-group">
+    <%= label f, :assign_to %>
+    <%= text_input f, :assign_to %>
+    <%= error_tag f, :assign_to %>
+  </div>
+<!--
+  <div class="form-group">
+    <%= label f, :completed %>
+    <%= checkbox f, :completed %>
+    <%= error_tag f, :completed %>
+  </div>
 
-  <%= label f, :created_at %>
-  <%= time_select f, :created_at %>
-  <%= error_tag f, :created_at %>
-
+  <div class="form-group">
+    <%= label f, :created_at %>
+    <%= time_select f, :created_at %>
+    <%= error_tag f, :created_at %>
+  </div>
+-->
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary"%>
   </div>
 <% end %>

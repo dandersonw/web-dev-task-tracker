@@ -7,6 +7,7 @@
       <th>Desc</th>
       <th>Completed</th>
       <th>Created at</th>
+      <th>Assigned To</th>
 
       <th></th>
     </tr>
@@ -17,7 +18,8 @@
       <td><%= task.title %></td>
       <td><%= task.desc %></td>
       <td><%= task.completed %></td>
-      <td><%= task.created_at %></td>
+      <td><%= task.inserted_at %></td>
+      <th><%= TaskTracker.Tasks.get_username_for_task(task)  %></th>
 
       <td>
         <%= link "Show", to: Routes.task_path(@conn, :show, task) %>

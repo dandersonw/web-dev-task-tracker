@@ -5,7 +5,7 @@ defmodule TaskTracker.Tasks do
 
   import Ecto.Query, warn: false
   alias TaskTracker.Repo
-
+  alias TaskTracker.Users
   alias TaskTracker.Tasks.Task
 
   @doc """
@@ -50,9 +50,24 @@ defmodule TaskTracker.Tasks do
 
   """
   def create_task(attrs \\ %{}) do
-    %Task{}
-    |> Task.changeset(attrs)
-    |> Repo.insert()
+    Repo.transaction(fn ->
+      task = %Task{}
+      |> Task.changeset(attrs)
+      |> Repo.insert!()
+      case maybe_assign_task_to_username(attrs, task) do
+        nil -> task
+        {:error, reason} -> Repo.rollback(reason)
+        {:ok, _} -> task
+      end
+    end)
+  end
+
+  def maybe_assign_task_to_username(attrs, task) do
+    case Map.fetch(attrs, "assign_to") do
+            {:ok, username} ->
+              assign_task_to_username(task, username)
+            {:error, _} -> nil
+    end
   end
 
   @doc """
@@ -68,9 +83,16 @@ defmodule TaskTracker.Tasks do
 
   """
   def update_task(%Task{} = task, attrs) do
-    task
-    |> Task.changeset(attrs)
-    |> Repo.update()
+    Repo.transaction(fn ->
+      task = task
+      |> Task.changeset(attrs)
+      |> Repo.update!()
+      case maybe_assign_task_to_username(attrs, task) do
+        nil -> task
+        {:error, reason} -> Repo.rollback(reason)
+        {:ok, _} -> task
+      end
+    end)
   end
 
   @doc """
@@ -149,6 +171,29 @@ defmodule TaskTracker.Tasks do
     %Assignment{}
     |> Assignment.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def assign_task_to_username(task, username) do
+    case Users.get_user_by_name(username) do
+      nil -> {:error, "no user by that name"}
+      user -> create_assignment(%{"user_id" => user.id,
+                                 "task_id" => task.id,
+                                 "created_at" => DateTime.utc_now})
+    end
+  end
+
+  def get_username_for_task(task) do
+    case get_assignment_for_task(task) do
+      {:ok, assignment} ->
+        case Users.get_user(assignment.user_id) do
+          {:ok, user} -> user.name
+        end
+      nil -> nil
+    end
+  end
+
+  def get_assignment_for_task(task) do
+    Repo.get_by(Assignment, task_id: task.id)
   end
 
   @doc """

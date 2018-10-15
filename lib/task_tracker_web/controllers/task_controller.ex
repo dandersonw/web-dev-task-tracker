@@ -15,14 +15,19 @@ defmodule TaskTrackerWeb.TaskController do
   end
 
   def create(conn, %{"task" => task_params}) do
+    task_params = task_params
+    |> Map.put("created_at", DateTime.utc_now)
+    |> Map.put("completed", false)
     case Tasks.create_task(task_params) do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
         |> redirect(to: Routes.task_path(conn, :show, task))
-
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
+      {:error, reason} ->
+        conn
+        |> render(conn, "new.html", changeset: %Ecto.Changeset{})
     end
   end
 
@@ -48,6 +53,10 @@ defmodule TaskTrackerWeb.TaskController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", task: task, changeset: changeset)
+      {:error, reason} ->
+        conn
+        |> put_flash(:info, reason)
+        |> redirect(to: Routes.task_path(conn, :show, task))
     end
   end
 
