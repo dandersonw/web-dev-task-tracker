@@ -1,7 +1,6 @@
 * task
 - id
 - created_at
-- started_at
 - title
 - status
 
@@ -9,6 +8,7 @@
 - id
 - username
 
-* task_user
+* task_user (assignment)
 - task_id
 - user_id
+- assigned_at
