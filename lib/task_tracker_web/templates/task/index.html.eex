@@ -1,5 +1,34 @@
 <h1>Tasks</h1>
 
+<div class="row">
+<%= if @all_users do %>
+<%= link "Show My Tasks", to: Routes.task_path(@conn,
+    :index,
+    all_users: false,
+    completed: @completed),
+    class: "btn btn-secondary" %>
+<%= else %>
+<%= link "Show All Users' Tasks", to: Routes.task_path(@conn,
+    :index,
+    all_users: true,
+    completed: @completed),
+    class: "btn btn-secondary" %>
+<%= end %>
+
+<%= if @completed do %>
+<%= link "Show In Progress Tasks", to: Routes.task_path(@conn,
+    :index,
+    completed: false,
+    all_users: @all_users),
+    class: "btn btn-secondary" %>
+<%= else %>
+<%= link "Show Completed Tasks", to: Routes.task_path(@conn,
+    :index,
+    completed: true,
+    all_users: @all_users),
+    class: "btn btn-secondary" %>
+<%= end %>
+</div>
 <table>
   <thead>
     <tr>

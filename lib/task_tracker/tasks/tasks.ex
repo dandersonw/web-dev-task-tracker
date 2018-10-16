@@ -42,7 +42,7 @@ defmodule TaskTracker.Tasks do
   """
   def create_task(attrs \\ %{}) do
     case put_assignee(attrs) do
-      :error -> {:error, Task.changeset(%Task{}, attrs)}
+      :error -> {:error, Ecto.Changeset.add_error(Task.changeset(%Task{}, attrs), :assign_to, "unknown user")}
       attrs -> %Task{}
       |> Task.changeset(attrs)
       |> Repo.insert()
@@ -90,7 +90,7 @@ defmodule TaskTracker.Tasks do
   """
   def update_task(%Task{} = task, attrs) do
     case put_assignee(attrs) do
-      :error -> Task.changeset(task, attrs)
+      :error -> {:error, Ecto.Changeset.add_error(Task.changeset(task, attrs), :assign_to, "unknown user")}
       attrs -> task
       |> Task.changeset(attrs)
       |> Repo.update()
