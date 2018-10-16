@@ -42,7 +42,8 @@ defmodule TaskTracker.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:cowboy, "~> 1.0"},
-      {:timex, "~> 3.1"}
+      {:timex, "~> 3.1"},
+      {:distillery, "~> 1.5"}
     ]
   end
 

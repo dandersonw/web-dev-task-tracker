@@ -10,8 +10,11 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :task_tracker, TaskTrackerWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [host: "example.com", port: 80],
+  server: true,
+  root: ".",
+  version: Application.spec(:phoenix_distillery, :vsn),
+  http: [:inet6, port: {:system, "PORT"}],
+  url: [host: "tasktracker1.derickanderson.xyz", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -81,8 +84,7 @@ end
 config :task_tracker, TaskTrackerWeb.Endpoint,
   secret_key_base: get_secret.("key_base");
 
-# Configure your database
-config :task_tracker, TaskTrackerWeb.Repo,
+config :task_tracker, TaskTracker.Repo,
   username: "task_tracker",
   password: get_secret.("db_pass"),
   database: "task_tracker_prod",
