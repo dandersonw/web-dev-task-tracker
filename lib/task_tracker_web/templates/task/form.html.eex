@@ -28,12 +28,6 @@
     <%= checkbox f, :completed %>
     <%= error_tag f, :completed %>
   </div>
-
-  <div class="form-group">
-    <%= label f, :created_at %>
-    <%= time_select f, :created_at %>
-    <%= error_tag f, :created_at %>
-  </div>
 -->
   <div>
     <%= submit "Save", class: "btn btn-primary"%>

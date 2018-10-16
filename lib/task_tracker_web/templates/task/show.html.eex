@@ -17,11 +17,6 @@
     <%= @task.completed %>
   </li>
 
-  <li>
-    <strong>Created at:</strong>
-    <%= @task.created_at %>
-  </li>
-
 </ul>
 
 <span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task) %></span>

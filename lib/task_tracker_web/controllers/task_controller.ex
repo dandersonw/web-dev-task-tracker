@@ -15,9 +15,6 @@ defmodule TaskTrackerWeb.TaskController do
   end
 
   def create(conn, %{"task" => task_params}) do
-    task_params = task_params
-    |> Map.put("created_at", DateTime.utc_now)
-    |> Map.put("completed", false)
     case Tasks.create_task(task_params) do
       {:ok, task} ->
         conn
