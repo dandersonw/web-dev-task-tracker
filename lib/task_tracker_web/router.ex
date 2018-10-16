@@ -20,6 +20,8 @@ defmodule TaskTrackerWeb.Router do
     get "/", PageController, :index
     resources "/users", UserController
     resources "/tasks", TaskController
+    get "/tasks/complete/:id", TaskController, :show_completion_form
+    put "/tasks/complete/:id", TaskController, :complete
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
   end
 

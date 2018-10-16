@@ -43,6 +43,32 @@ defmodule TaskTrackerWeb.TaskController do
     render(conn, "edit.html", task: task, changeset: changeset)
   end
 
+  def show_completion_form(conn, %{"id" => id}) do
+    task = Tasks.get_task!(id)
+    changeset = Tasks.change_task(task)
+    render(conn, "complete.html", task: task, changeset: changeset, current_user: conn.assigns.current_user)
+  end
+
+  def complete(conn, %{"id" => id, "task" => task_params}) do
+    {hours_spent, _} = Integer.parse(Map.get(task_params, "time_spent_hours"))
+    {minutes_spent, _} =  Integer.parse(Map.get(task_params, "time_spent_minutes"))
+    time_spent = hours_spent * 60 + minutes_spent
+
+    task = Tasks.get_task!(id)
+    task_params = task_params
+    |> Map.put("completed", true)
+    |> Map.put("time_spent", time_spent)
+    case Tasks.update_task(task, task_params) do
+      {:ok, task} ->
+        conn
+        |> put_flash(:info, "Task completed successfully.")
+        |> redirect(to: Routes.task_path(conn, :show, task))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "complete.html", task: task, changeset: changeset, current_user: conn.assigns.current_user)
+    end
+  end
+
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Tasks.get_task!(id)
 

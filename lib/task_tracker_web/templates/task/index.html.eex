@@ -24,6 +24,7 @@
       <td>
         <%= link "Show", to: Routes.task_path(@conn, :show, task) %>
         <%= link "Edit", to: Routes.task_path(@conn, :edit, task) %>
+        <%= link "Complete", to: Routes.task_path(@conn, :show_completion_form, task) %>
         <%= link "Delete", to: Routes.task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"] %>
       </td>
     </tr>

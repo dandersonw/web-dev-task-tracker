@@ -15,7 +15,7 @@ defmodule TaskTrackerWeb.TaskControllerTest do
   describe "index" do
     test "lists all tasks", %{conn: conn} do
       conn = get(conn, Routes.task_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Tasks"
+      assert html_response(conn, 200) =~ "Tasks"
     end
   end
 

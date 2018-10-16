@@ -18,5 +18,6 @@ defmodule TaskTracker.Tasks.Task do
     task
     |> cast(attrs, [:title, :desc, :completed, :time_spent, :assignee])
     |> validate_required([:title, :desc])
+    |> validate_number(:time_spent, greater_than: 0)
   end
 end
