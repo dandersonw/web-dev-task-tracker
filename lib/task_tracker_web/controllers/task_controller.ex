@@ -4,9 +4,16 @@ defmodule TaskTrackerWeb.TaskController do
   alias TaskTracker.Tasks
   alias TaskTracker.Tasks.Task
 
-  def index(conn, _params) do
-    tasks = Tasks.list_tasks()
-    render(conn, "index.html", tasks: tasks)
+
+  @index_optional_params %{"all_users" => false, "completed" => false}
+
+  def index(conn, params) do
+    params = Map.merge(@index_optional_params, params)
+    case params do
+      %{"all_users" => all_users, "completed" => completed} ->
+        tasks = Tasks.get_tasks(conn.assigns.current_user, all_users, completed)
+        render(conn, "index.html", tasks: tasks)
+    end
   end
 
   def new(conn, _params) do

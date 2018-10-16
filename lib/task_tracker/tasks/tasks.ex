@@ -69,6 +69,13 @@ defmodule TaskTracker.Tasks do
     end
   end
 
+  def get_tasks(user, all_users, completed) do
+    case {user, all_users, completed} do
+      {nil, _, completed} -> Repo.all(from(t in Task, where: not ^completed or t.completed == false))
+      {user, all_users, completed} -> Repo.all(from(t in Task, where: (^all_users or t.assignee == ^user.id) and (^completed or t.completed == false)))
+    end
+  end
+
   @doc """
   Updates a task.
 
