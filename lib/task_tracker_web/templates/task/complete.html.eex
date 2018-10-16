@@ -1,0 +1,8 @@
+<h1>Complete Task</h1>
+
+<%= if @current_user && (@current_user.id == @task.assignee) do %>
+<%= render "completion_form.html", Map.put(assigns, :action, Routes.task_path(@conn, :complete, @task)) %>
+<% else %>
+<p>You're not this task's assignee </p>
+<% end %>
+<span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>

@@ -1,59 +1,55 @@
 <h1>Tasks</h1>
 
 <div class="row">
-<%= if @all_users do %>
-<%= link "Show My Tasks", to: Routes.task_path(@conn,
-    :index,
-    all_users: false,
-    completed: @completed),
-    class: "btn btn-secondary" %>
-<%= else %>
-<%= link "Show All Users' Tasks", to: Routes.task_path(@conn,
-    :index,
-    all_users: true,
-    completed: @completed),
-    class: "btn btn-secondary" %>
-<%= end %>
-
-<%= if @completed do %>
-<%= link "Show In Progress Tasks", to: Routes.task_path(@conn,
-    :index,
-    completed: false,
-    all_users: @all_users),
-    class: "btn btn-secondary" %>
-<%= else %>
-<%= link "Show Completed Tasks", to: Routes.task_path(@conn,
-    :index,
-    completed: true,
-    all_users: @all_users),
-    class: "btn btn-secondary" %>
-<%= end %>
+  <div class="col-1">
+    <%= link "New Task", to: Routes.task_path(@conn, :new),
+        class: "btn btn-secondary" %>
+  </div>
+  <div class="col-2">
+    <%= if @all_users do %>
+    <%= link "Show My Tasks", to: Routes.task_path(@conn,
+        :index,
+        all_users: false,
+        completed: @completed),
+        class: "btn btn-secondary" %>
+    <% else %>
+    <%= link "Show All Users' Tasks", to: Routes.task_path(@conn,
+        :index,
+        all_users: true,
+        completed: @completed),
+        class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+  <div class="col-2">
+    <%= if @completed do %>
+    <%= link "Show In Progress Tasks", to: Routes.task_path(@conn,
+        :index,
+        completed: false,
+        all_users: @all_users),
+        class: "btn btn-secondary" %>
+    <% else %>
+    <%= link "Show Completed Tasks", to: Routes.task_path(@conn,
+        :index,
+        completed: true,
+        all_users: @all_users),
+        class: "btn btn-secondary" %>
+    <% end %>
+  </div>
 </div>
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Desc</th>
-      <th>Completed</th>
-      <th>Created at</th>
-      <th>Assigned To</th>
-
-      <th></th>
-    </tr>
-  </thead>
+<table class="table table-striped">
   <tbody>
 <%= for task <- @tasks do %>
     <tr>
-      <td><%= task.title %></td>
+      <td><%= if task.completed do "✓" else link "Complete", to: Routes.task_path(@conn, :show_completion_form, task) end %>
+      <td><%= link task.title, to: Routes.task_path(@conn, :show, task) %></td>
       <td><%= task.desc %></td>
-      <td><%= task.completed %></td>
-      <td><%= task.inserted_at %></td>
-      <th><%= TaskTracker.Tasks.get_username_for_task(task)  %></th>
+      <td><%= Timex.from_now(task.inserted_at) %></td>
+      <th><%= case TaskTracker.Tasks.get_username_for_task(task) do
+              nil -> link "Assign", to: Routes.task_path(@conn, :edit, task)
+              name -> name
+              end %></th>
 
       <td>
-        <%= link "Show", to: Routes.task_path(@conn, :show, task) %>
-        <%= link "Edit", to: Routes.task_path(@conn, :edit, task) %>
-        <%= link "Complete", to: Routes.task_path(@conn, :show_completion_form, task) %>
         <%= link "Delete", to: Routes.task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"] %>
       </td>
     </tr>
@@ -61,4 +57,4 @@
   </tbody>
 </table>
 
-<span><%= link "New Task", to: Routes.task_path(@conn, :new) %></span>
+<span></span>
