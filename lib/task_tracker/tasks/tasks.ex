@@ -41,9 +41,32 @@ defmodule TaskTracker.Tasks do
 
   """
   def create_task(attrs \\ %{}) do
-    %Task{}
-    |> Task.changeset(attrs)
-    |> Repo.insert()
+    case put_assignee(attrs) do
+      :error -> {:error, Task.changeset(%Task{}, attrs)}
+      attrs -> %Task{}
+      |> Task.changeset(attrs)
+      |> Repo.insert()
+    end
+  end
+
+  def get_username_for_task(task) do
+    case task.assignee do
+      nil -> nil
+      user_id -> Users.get_user!(user_id).name
+    end
+  end
+
+  def put_assignee(attrs) do
+    case Map.get(attrs, "assign_to") do
+      nil -> attrs
+      "" -> attrs
+      username ->
+        user = Users.get_user_by_name(username)
+        case user do
+          nil -> :error
+          found -> Map.put(attrs, "assignee", found.id)
+        end
+    end
   end
 
   @doc """
@@ -59,9 +82,12 @@ defmodule TaskTracker.Tasks do
 
   """
   def update_task(%Task{} = task, attrs) do
-    task
-    |> Task.changeset(attrs)
-    |> Repo.update()
+    case put_assignee(attrs) do
+      :error -> Task.changeset(task, attrs)
+      attrs -> task
+      |> Task.changeset(attrs)
+      |> Repo.update()
+    end
   end
 
   @doc """

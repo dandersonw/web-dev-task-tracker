@@ -17,6 +17,11 @@
     <%= @task.completed %>
   </li>
 
+  <li>
+    <strong>Assigned to:</strong>
+    <%= TaskTracker.Tasks.get_username_for_task(@task)  %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task) %></span>
