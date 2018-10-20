@@ -2,6 +2,7 @@
 - id
 - created_at
 - title
+- description
 - status
 
 * user

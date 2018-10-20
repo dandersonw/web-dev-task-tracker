@@ -7,6 +7,21 @@
     <%= @user.name %>
   </li>
 
+  <li>
+    <strong>Manager:</strong>
+    <%= if @user.manager != nil do TaskTracker.Users.get_user!(@user.manager).name else "" end %>
+  </li>
+
+  <%= if @user.is_manager do %>
+  <li>
+    <strong>Underlings:</strong>
+    <ul>
+      <%= for underling <- TaskTracker.Users.get_underlings(@user) do %>
+          <li> <%= underling.name %>  </li>
+          <% end %>
+    </ul>
+    <% end %>
+  </li>
 </ul>
 
 <span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user) %></span>

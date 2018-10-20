@@ -5,6 +5,8 @@ defmodule TaskTracker.Users.User do
 
   schema "users" do
     field :name, :string
+    field :manager, :id
+    field :is_manager, :boolean
 
     timestamps()
   end
@@ -12,7 +14,7 @@ defmodule TaskTracker.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :manager, :is_manager])
     |> validate_required([:name])
     |> unique_constraint(:name)
   end

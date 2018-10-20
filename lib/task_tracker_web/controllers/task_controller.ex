@@ -5,16 +5,15 @@ defmodule TaskTrackerWeb.TaskController do
   alias TaskTracker.Tasks.Task
 
 
-  @index_optional_params %{"all_users" => "false", "completed" => "false"}
+  @index_optional_params %{"which_users" => "my", "completed" => "false"}
 
   def index(conn, params) do
     params = Map.merge(@index_optional_params, params)
     case params do
-      %{"all_users" => all_users, "completed" => completed} ->
-        all_users = String.to_existing_atom(all_users)
+      %{"which_users" => which_users, "completed" => completed} ->
         completed = String.to_existing_atom(completed)
-        tasks = Tasks.get_tasks(conn.assigns.current_user, all_users, completed)
-        render(conn, "index.html", tasks: tasks, all_users: all_users, completed: completed)
+        tasks = Tasks.get_tasks(conn.assigns.current_user, which_users, completed)
+        render(conn, "index.html", tasks: tasks, which_users: which_users, completed: completed)
     end
   end
 
@@ -24,7 +23,7 @@ defmodule TaskTrackerWeb.TaskController do
   end
 
   def create(conn, %{"task" => task_params}) do
-    case Tasks.create_task(task_params) do
+    case Tasks.create_task(conn.assigns.current_user, task_params) do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
@@ -60,7 +59,7 @@ defmodule TaskTrackerWeb.TaskController do
     task_params = task_params
     |> Map.put("completed", true)
     |> Map.put("time_spent", time_spent)
-    case Tasks.update_task(task, task_params) do
+    case Tasks.update_task(conn.assigns.current_user, task, task_params) do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task completed successfully.")
@@ -74,7 +73,7 @@ defmodule TaskTrackerWeb.TaskController do
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Tasks.get_task!(id)
 
-    case Tasks.update_task(task, task_params) do
+    case Tasks.update_task(conn.assigns.current_user, task, task_params) do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")

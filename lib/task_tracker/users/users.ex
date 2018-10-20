@@ -21,6 +21,10 @@ defmodule TaskTracker.Users do
     Repo.all(User)
   end
 
+  def get_underlings(user) do
+    Repo.all(from(u in User, where: u.manager == ^user.id))
+  end
+
   @doc """
   Gets a single user.
 
@@ -56,9 +60,12 @@ defmodule TaskTracker.Users do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
+    changeset = %User{}
     |> User.changeset(attrs)
-    |> Repo.insert()
+    case put_manager(changeset, attrs) do
+      :error -> {:error, Ecto.Changeset.add_error(changeset, :manager_name, "unknown user")}
+      changeset -> Repo.insert(changeset)
+    end
   end
 
   @doc """
@@ -74,9 +81,12 @@ defmodule TaskTracker.Users do
 
   """
   def update_user(%User{} = user, attrs) do
-    user
+    changeset = user
     |> User.changeset(attrs)
-    |> Repo.update()
+    case put_manager(changeset, attrs) do
+      {:error, reason} -> {:error, Ecto.Changeset.add_error(changeset, :manager_name, reason)}
+      changeset -> Repo.update(changeset)
+    end
   end
 
   @doc """
@@ -107,4 +117,23 @@ defmodule TaskTracker.Users do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  defp put_manager(changeset, attrs) do
+    case Map.get(attrs, "manager_name") do
+      nil -> changeset
+      "" -> changeset
+      username ->
+        user = get_user_by_name(username)
+        case user do
+          nil -> {:error, "unknown user"}
+          found ->
+            if found.is_manager do
+              Ecto.Changeset.put_change(changeset, :manager, found.id)
+            else
+              {:error, "not a manager"}
+            end
+        end
+    end
+  end
+
 end

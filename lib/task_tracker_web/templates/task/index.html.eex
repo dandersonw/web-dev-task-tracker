@@ -5,33 +5,45 @@
     <%= link "New Task", to: Routes.task_path(@conn, :new),
         class: "btn btn-secondary" %>
   </div>
+  <%= if @which_users != "my" do %>
   <div class="col-2">
-    <%= if @all_users do %>
     <%= link "Show My Tasks", to: Routes.task_path(@conn,
         :index,
-        all_users: false,
+        which_users: "my",
         completed: @completed),
         class: "btn btn-secondary" %>
-    <% else %>
+  </div>
+  <% end %>
+  <%= if @which_users != "all" do %>
+  <div class="col-2">
     <%= link "Show All Users' Tasks", to: Routes.task_path(@conn,
         :index,
-        all_users: true,
+        which_users: "all",
         completed: @completed),
         class: "btn btn-secondary" %>
-    <% end %>
   </div>
+  <% end %>
+  <%= if @which_users != "underling" do %>
+  <div class="col-2">
+    <%= link "Show Underling Tasks", to: Routes.task_path(@conn,
+        :index,
+        which_users: "underling",
+        completed: @completed),
+        class: "btn btn-secondary" %>
+  </div>
+  <% end %>
   <div class="col-2">
     <%= if @completed do %>
     <%= link "Show In Progress Tasks", to: Routes.task_path(@conn,
         :index,
         completed: false,
-        all_users: @all_users),
+        which_users: @which_users),
         class: "btn btn-secondary" %>
     <% else %>
     <%= link "Show Completed Tasks", to: Routes.task_path(@conn,
         :index,
         completed: true,
-        all_users: @all_users),
+        which_users: @which_users),
         class: "btn btn-secondary" %>
     <% end %>
   </div>
