@@ -21,8 +21,10 @@ defmodule TaskTrackerWeb.Router do
     resources "/users", UserController
     resources "/tasks", TaskController
     get "/tasks/complete/:id", TaskController, :show_completion_form
-    put "/tasks/complete/:id", TaskController, :complete
+    put "/tasks/complete/:id", TaskController, :show_completion_form
+    put "/tasks/complete/do/:id", TaskController, :complete
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
+    resources "/time_blocks", TimeBlockController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.

@@ -4,16 +4,10 @@
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
-
-  <div class="form-group">
-    <%= label f, :time_spent_hours %>
-    <%= number_input f, :time_spent_hours%>
-    <%= label f, :time_spent_minutes %>
-    <%= select f, :time_spent_minutes, ["0": 0, "15": 15, "30": 30, "45": 45] %>
-    <%= error_tag f, :time_spent %>
-  </div>
-
   <div>
     <%= submit "Complete Task", class: "btn btn-primary"%>
   </div>
 <% end %>
+
+<%=render "time_block_form.html", Map.put(assigns, :redirect_location, :show_completion_form) %>
+

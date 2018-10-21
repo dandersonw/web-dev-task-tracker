@@ -1,0 +1,47 @@
+<!-- @task -->
+<h2>Time Blocks</h2>
+<div class="row">
+<table class="table table-striped">
+<tbody>
+  <tr>
+    <td>Start time</td>
+    <td>End time</td>
+    <td></td>
+  </tr>
+<%= for block <- TaskTracker.Tasks.get_time_blocks(@task) do %>
+    <tr>
+      <td><%= block.start %></td>
+      <td><%= block.end %></td>
+      <td><%= link "Delete", to: Routes.time_block_path(@conn, :delete, block), method: :delete %></td>
+    </tr>
+<% end %>
+</tbody>
+</table>
+
+<%= form_for TaskTracker.Tasks.change_time_block(%TaskTracker.Tasks.TimeBlock{}), Routes.time_block_path(@conn, :create), fn f -> %>
+
+  <%= hidden_input f, :task_id, value: @task.id %>
+  <%= hidden_input f, :redirect_location, value: @redirect_location %>
+
+<div class="row">
+  <div class="column">
+    <%= label f, :start %>
+    <%= datetime_select f, :start, class: "form-control" %>
+    <%= error_tag f, :start %>
+  </div>
+  <div class="column">
+    <%= label f, :end %>
+    <%= datetime_select f, :end, class: "form-control" %>
+    <%= error_tag f, :end %>
+  </div>
+  <div class="column">
+    <%= submit "Save", class: "btn btn-secondary"%>
+  </div>
+</div>  
+
+<% end %>
+
+</div>
+
+
+    

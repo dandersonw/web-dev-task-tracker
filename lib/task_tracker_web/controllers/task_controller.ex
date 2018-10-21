@@ -51,14 +51,9 @@ defmodule TaskTrackerWeb.TaskController do
   end
 
   def complete(conn, %{"id" => id, "task" => task_params}) do
-    {hours_spent, _} = Integer.parse(Map.get(task_params, "time_spent_hours"))
-    {minutes_spent, _} =  Integer.parse(Map.get(task_params, "time_spent_minutes"))
-    time_spent = hours_spent * 60 + minutes_spent
-
     task = Tasks.get_task!(id)
     task_params = task_params
     |> Map.put("completed", true)
-    |> Map.put("time_spent", time_spent)
     case Tasks.update_task(conn.assigns.current_user, task, task_params) do
       {:ok, task} ->
         conn

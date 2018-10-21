@@ -3,9 +3,9 @@ defmodule TaskTrackerWeb.TaskControllerTest do
 
   alias TaskTracker.Tasks
 
-  @create_attrs %{completed: true, desc: "some desc", time_spent: 42, title: "some title"}
-  @update_attrs %{completed: false, desc: "some updated desc", time_spent: 43, title: "some updated title"}
-  @invalid_attrs %{completed: nil, desc: nil, time_spent: nil, title: nil}
+  @create_attrs %{completed: true, desc: "some desc", title: "some title"}
+  @update_attrs %{completed: false, desc: "some updated desc", title: "some updated title"}
+  @invalid_attrs %{completed: nil, desc: nil, title: nil}
 
   def fixture(:task) do
     {:ok, task} = Tasks.create_task(@create_attrs)

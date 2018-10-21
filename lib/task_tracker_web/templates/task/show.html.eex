@@ -26,3 +26,7 @@
 
 <span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task) %></span>
 <span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>
+
+<%= if @conn.assigns.current_user != nil and @conn.assigns.current_user.id == @task.assignee do %>
+<%=render "time_block_form.html", Map.put(assigns, :redirect_location, :show) %>
+<% end %>
