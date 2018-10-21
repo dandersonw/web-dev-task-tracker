@@ -1,4 +1,6 @@
-<!-- @task -->
+<script>
+  window.time_block_path = "<%= Routes.time_block_path(@conn, :create) %>"
+</script>
 <h2>Time Blocks</h2>
 <div class="row">
 <table class="table table-striped">
@@ -38,10 +40,20 @@
     <%= submit "Save", class: "btn btn-secondary"%>
   </div>
 </div>  
-
 <% end %>
 
 </div>
-
-
-    
+<div class="row">
+  <div class="column">
+    <button
+      id="start-working-button"
+      class="btn btn-secondary">Start Working</button>
+  </div>
+  <div class="column">
+    <button
+      id="stop-working-button"
+      class="btn btn-secondary",
+      data-csrf-token="<%= Plug.Conn.get_session(@conn, :csrf_token) %>",
+      data-task-id="<%= @task.id %>">Stop Working</button>
+  </div>
+</div>

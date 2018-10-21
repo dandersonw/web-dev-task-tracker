@@ -14,13 +14,18 @@ defmodule TaskTrackerWeb.TimeBlockController do
   def create(conn, %{"time_block" => time_block_params}) do
     {task_id, _} = Integer.parse(Map.get(time_block_params, "task_id"))
     task = Tasks.get_task!(task_id)
-    redirect_location = String.to_atom(Map.get(time_block_params, "redirect_location"))
+    redirect_location = Map.get(time_block_params, "redirect_location")
     with {:ok, %TimeBlock{} = time_block} <- Tasks.create_time_block(time_block_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.task_path(conn, redirect_location, task))
-      |> put_flash(:info, "added")
-      |> redirect(to: Routes.task_path(conn, redirect_location, task))
+      conn = put_status(conn, :created)
+      if redirect_location != nil do
+        redirect_location = String.to_atom(redirect_location)
+        conn
+        |> put_resp_header("location", Routes.task_path(conn, redirect_location, task))
+        |> redirect(to: Routes.task_path(conn, redirect_location, task))
+      else
+        conn
+        |> send_resp(:no_content, "")
+      end
     end
   end
 
