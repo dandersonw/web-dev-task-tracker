@@ -2,11 +2,10 @@
 
 Web dev homework.
 
-Design decisions:
-* How to structure the DB: Originally I set up a table for mapping users to
-  tasks, but had a lot of trouble getting it to work with the Phoenix ORM. It
-  was simpler, implementation wise, to just have `assignee` as a field on the
-  Task.
-* Presentation of tasks: I oriented the default presentation around what I
-  figured was the most common flow - a user looking at his unfinished
-  tasks. Other tasks can be made visible with toggle buttons on the page.
+Design decisions for the latest homework:
+* How to structure the DB: It was convenient to have manager as a nullable field
+  on User. task_id was a mandatory field on TimeBlock.
+* Presentation of tasks: Since I already had some options on the task index
+  page, "underling tasks" was a natural extension.
+* csrf_token: I added it to the app.html.eex header, since it could
+  hypothetically be used in AJAX forms all over the application.

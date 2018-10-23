@@ -15,5 +15,5 @@ echo "Generating release..."
 mix release
 mix ecto.reset
 
-sudo runuser -l phoenix -c 'cp -r . /home/phoenix/task-tracker-1'
-sudo systemctl restart tasktracker1
+sudo runuser -l phoenix -c 'cp -r . /home/phoenix/task-tracker-2'
+sudo systemctl restart tasktracker2
